@@ -22,7 +22,8 @@
     "required": [
         "id",
         "userId",
-        "title"
+        "title",
+        "date"
     ],
     "additionalProperties": false
 }
