@@ -46,7 +46,7 @@ export class DailyAccess {
         return item as Daily
     }
 
-    async updateDaily(userId: string, id: string, item: UpdateDailyRequest): Promise<Daily> {
+    async updateDaily(userId: string, id: string, item: UpdateDailyRequest): Promise<any> {
         const newItem = await this.db.update({
             TableName: DAILY_TABLE,
             Key: {
@@ -74,7 +74,7 @@ export class DailyAccess {
 
         console.log(`updateDaily response: ${JSON.stringify(newItem)}`)
 
-        return newItem as Daily
+        return newItem
     }
 
     async updateDailyImageUrl(userId: string, id: string, imageId: string): Promise<string> {
