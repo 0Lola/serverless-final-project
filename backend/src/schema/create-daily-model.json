@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "item",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "userId": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "content": {
+            "type": "string"
+        },
+        "date": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "userId",
+        "title"
+    ],
+    "additionalProperties": false
+}
