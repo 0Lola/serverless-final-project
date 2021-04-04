@@ -265,7 +265,7 @@ resources:
                 - 'kms:*'
               Resource: '*'
 
-    KMSKeyDailyAlias:
+    KMSKeyAlias:
       Type: AWS::KMS::Alias
       Properties:
         AliasName: alias/auth0Key-${self:provider.stage}
