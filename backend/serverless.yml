@@ -244,13 +244,13 @@ resources:
         DisplayName: Serverless Bucket Topic
         TopicName: ${self:custom.topicName}
 
-    KMSKey:
+    KMSDailyKey:
       Type: AWS::KMS::Key
       Properties:
         Description: KMS key to encrypt Auth0 secret
         KeyPolicy:
           Version: '2012-10-17'
-          Id: key-serverless-auth0
+          Id: key-daily-serverless-auth0
           Statement:
             - Sid: Allow administration of the key
               Effect: Allow
@@ -265,15 +265,15 @@ resources:
                 - 'kms:*'
               Resource: '*'
 
-    KMSKeyAlias:
+    KMSKeyDailyAlias:
       Type: AWS::KMS::Alias
       Properties:
         AliasName: alias/auth0Key-${self:provider.stage}
-        TargetKeyId: !Ref KMSKey
+        TargetKeyId: !Ref KMSDailyKey
 
     Auth0Secret:
       Type: AWS::SecretsManager::Secret
       Properties:
         Name: ${self:provider.environment.AUTH_0_SECRET_ID}
         Description: Auth0 secret
-        KmsKeyId: !Ref KMSKey
+        KmsKeyId: !Ref KMSDailyKey
