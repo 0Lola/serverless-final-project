@@ -1,15 +1,13 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import { parseUserId } from '../../auth/utils';
 import { createLogger } from '../../utils/logger'
 import { getAllDailyByToken } from '../../businessLogic/dailyLogic';
 import { Daily } from '../../models/Daily';
-import * as middy from 'middy'
-import { cors } from 'middy/middlewares'
 
 const logger = createLogger('auth')
 
-export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const split = event.headers.Authorization.split(' ')
     const token = split[1]
     const userId = parseUserId(token)
@@ -28,12 +26,4 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
         })
     }
 
-})
-
-handler.use(
-    cors({
-        credentials: true
-    })
-)
-
-
+}
