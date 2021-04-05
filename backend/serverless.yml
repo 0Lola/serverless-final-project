@@ -82,9 +82,9 @@ functions:
           path: daily
           cors: true
           authorizer: Auth
-          request:
-            schema:
-              application/json: ${file(src/schema/create-daily-model.json)}
+          # request:
+          #   schema:
+          #     application/json: ${file(src/schema/create-daily-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -99,9 +99,9 @@ functions:
           path: daily/{id}
           cors: true
           authorizer: Auth
-          request:
-            schema:
-              application/json: ${file(src/schema/update-daily-model.json)}
+          # request:
+          #   schema:
+          #     application/json: ${file(src/schema/update-daily-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
