@@ -3,10 +3,10 @@ import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
-import { EditTodo } from './components/EditTodo'
+import { EditDaily } from './components/EditDaily'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
-import { Todos } from './components/Todos'
+import { DailyList } from './components/DailyList'
 
 export interface AppProps {}
 
@@ -92,7 +92,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/"
           exact
           render={props => {
-            return <Todos {...props} auth={this.props.auth} />
+            return <DailyList {...props} auth={this.props.auth} />
           }}
         />
 
@@ -100,7 +100,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/todos/:todoId/edit"
           exact
           render={props => {
-            return <EditTodo {...props} auth={this.props.auth} />
+            return <EditDaily {...props} auth={this.props.auth} />
           }}
         />
 

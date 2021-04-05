@@ -4,7 +4,6 @@ import update from 'immutability-helper'
 import * as React from 'react'
 import {
   Button,
-  Checkbox,
   Divider,
   Grid,
   Header,
@@ -14,106 +13,89 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { createDaily, deleteDaily, getDaily, patchDaily } from '../api/daily-api'
 import Auth from '../auth/Auth'
-import { Todo } from '../types/Todo'
+import { Daily } from '../types/Daily'
 
-interface TodosProps {
+interface Props {
   auth: Auth
   history: History
 }
 
-interface TodosState {
-  todos: Todo[]
-  newTodoName: string
-  loadingTodos: boolean
+interface State {
+  dailyList: Daily[]
+  newName: string
+  loading: boolean
 }
 
-export class Todos extends React.PureComponent<TodosProps, TodosState> {
-  state: TodosState = {
-    todos: [],
-    newTodoName: '',
-    loadingTodos: true
+export class DailyList extends React.PureComponent<Props, State> {
+  state: State = {
+    dailyList: [],
+    newName: '',
+    loading: true
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newTodoName: event.target.value })
+    this.setState({ newName: event.target.value })
   }
 
-  onEditButtonClick = (todoId: string) => {
-    this.props.history.push(`/todos/${todoId}/edit`)
+  onEditButtonClick = (id: string) => {
+    this.props.history.push(`/daily/${id}/edit`)
   }
 
-  onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onDailyCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      const dueDate = this.calculateDueDate()
-      const newTodo = await createTodo(this.props.auth.getIdToken(), {
-        name: this.state.newTodoName,
-        dueDate
+      const date = this.calculateDueDate()
+      const newDaily = await createDaily(this.props.auth.getIdToken(), {
+        title: this.state.newName,
+        content: '',
+        date: this.calculateDueDate()
       })
       this.setState({
-        todos: [...this.state.todos, newTodo],
-        newTodoName: ''
+        dailyList: [...this.state.dailyList, newDaily],
+        newName: ''
       })
     } catch {
-      alert('Todo creation failed')
+      alert('Daily creation failed')
     }
   }
 
-  onTodoDelete = async (todoId: string) => {
+  onDailyDelete = async (id: string) => {
     try {
-      await deleteTodo(this.props.auth.getIdToken(), todoId)
+      await deleteDaily(this.props.auth.getIdToken(), id)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId != todoId)
+        dailyList: this.state.dailyList.filter(daily => daily.id != id)
       })
     } catch {
-      alert('Todo deletion failed')
-    }
-  }
-
-  onTodoCheck = async (pos: number) => {
-    try {
-      const todo = this.state.todos[pos]
-      await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
-        name: todo.name,
-        dueDate: todo.dueDate,
-        done: !todo.done
-      })
-      this.setState({
-        todos: update(this.state.todos, {
-          [pos]: { done: { $set: !todo.done } }
-        })
-      })
-    } catch {
-      alert('Todo deletion failed')
+      alert('Daily deletion failed')
     }
   }
 
   async componentDidMount() {
     try {
-      const todos = await getTodos(this.props.auth.getIdToken())
+      const dailyList = await getDaily(this.props.auth.getIdToken())
       this.setState({
-        todos,
-        loadingTodos: false
+        dailyList,
+        loading: false
       })
     } catch (e) {
-      alert(`Failed to fetch todos: ${e.message}`)
+      alert(`Failed to fetch daily: ${e.message}`)
     }
   }
 
   render() {
     return (
       <div>
-        <Header as="h1">TODOs</Header>
+        <Header as="h1">Daily</Header>
 
-        {this.renderCreateTodoInput()}
+        {this.renderCreateDailyInput()}
 
-        {this.renderTodos()}
+        {this.renderDaily()}
       </div>
     )
   }
 
-  renderCreateTodoInput() {
+  renderCreateDailyInput() {
     return (
       <Grid.Row>
         <Grid.Column width={16}>
@@ -123,7 +105,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               labelPosition: 'left',
               icon: 'add',
               content: 'New task',
-              onClick: this.onTodoCreate
+              onClick: this.onDailyCreate
             }}
             fluid
             actionPosition="left"
@@ -138,8 +120,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     )
   }
 
-  renderTodos() {
-    if (this.state.loadingTodos) {
+  renderDaily() {
+    if (this.state.loading) {
       return this.renderLoading()
     }
 
@@ -159,26 +141,20 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   renderTodosList() {
     return (
       <Grid padded>
-        {this.state.todos.map((todo, pos) => {
+        {this.state.dailyList.map((daily, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
-              <Grid.Column width={1} verticalAlign="middle">
-                <Checkbox
-                  onChange={() => this.onTodoCheck(pos)}
-                  checked={todo.done}
-                />
-              </Grid.Column>
+            <Grid.Row key={daily.id}>
               <Grid.Column width={10} verticalAlign="middle">
-                {todo.name}
+                {daily.title}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {todo.dueDate}
+                {daily.date}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(todo.todoId)}
+                  onClick={() => this.onEditButtonClick(daily.id)}
                 >
                   <Icon name="pencil" />
                 </Button>
@@ -187,13 +163,13 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 <Button
                   icon
                   color="red"
-                  onClick={() => this.onTodoDelete(todo.todoId)}
+                  onClick={() => this.onDailyDelete(daily.id)}
                 >
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+              {daily.imageUrl && (
+                <Image src={daily.imageUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />
