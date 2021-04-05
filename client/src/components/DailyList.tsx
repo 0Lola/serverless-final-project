@@ -23,36 +23,63 @@ interface Props {
 
 interface State {
   dailyList: Daily[]
-  newName: string
+  newTitle: string
+  newContent: string
   loading: boolean
 }
 
 export class DailyList extends React.PureComponent<Props, State> {
   state: State = {
     dailyList: [],
-    newName: '',
+    newTitle: '',
+    newContent: '',
     loading: true
   }
 
-  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newName: event.target.value })
+  handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newTitle: event.target.value })
+  }
+
+  handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newContent: event.target.value })
   }
 
   onEditButtonClick = (id: string) => {
     this.props.history.push(`/daily/${id}/edit`)
   }
 
-  onDailyCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+//   onDailyCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+//     try {
+//       const date = this.calculateDueDate()
+//       console.log(JSON.stringify(this.state));
+//       const newDaily = await createDaily(this.props.auth.getIdToken(), {
+//         title: this.state.newTitle,
+//         content: this.state.newContent,
+//         date: date
+//       })
+//       this.setState({
+//         dailyList: [...this.state.dailyList, newDaily],
+//         newTitle: '',
+//         newContent : ''
+//       })
+//     } catch {
+//       alert('Daily creation failed')
+//     }
+//   }
+
+  onDailyCreate = async () => {
     try {
       const date = this.calculateDueDate()
+      console.log(JSON.stringify(this.state));
       const newDaily = await createDaily(this.props.auth.getIdToken(), {
-        title: this.state.newName,
-        content: '',
-        date: this.calculateDueDate()
+        title: this.state.newTitle,
+        content: this.state.newContent,
+        date: date
       })
       this.setState({
         dailyList: [...this.state.dailyList, newDaily],
-        newName: ''
+        newTitle: '',
+        newContent : ''
       })
     } catch {
       alert('Daily creation failed')
@@ -99,18 +126,22 @@ export class DailyList extends React.PureComponent<Props, State> {
       <Grid.Row>
         <Grid.Column width={16}>
           <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'New task',
-              onClick: this.onDailyCreate
+            style={{
+                paddingRight:10,
             }}
-            fluid
-            actionPosition="left"
-            placeholder="To change the world..."
-            onChange={this.handleNameChange}
+            placeholder="title"
+            onChange={this.handleTitleChange}
           />
+          <Input
+            style={{
+                paddingRight:10,
+            }}
+            placeholder="content"
+            onChange={this.handleContentChange}
+          />
+          <Button color="blue" onClick={this.onDailyCreate}>
+            Create Daily
+          </Button>
         </Grid.Column>
         <Grid.Column width={16}>
           <Divider />

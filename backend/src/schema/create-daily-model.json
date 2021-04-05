@@ -20,10 +20,7 @@
         }
     },
     "required": [
-        "id",
-        "userId",
         "title",
-        "date"
     ],
     "additionalProperties": false
 }
