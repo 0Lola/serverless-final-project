@@ -69,12 +69,10 @@ export class DailyList extends React.PureComponent<Props, State> {
 
   onDailyCreate = async () => {
     try {
-      const date = this.calculateDueDate()
-      console.log(JSON.stringify(this.state));
       const newDaily = await createDaily(this.props.auth.getIdToken(), {
         title: this.state.newTitle,
         content: this.state.newContent,
-        date: date
+        date: this.calculateDueDate()
       })
       this.setState({
         dailyList: [...this.state.dailyList, newDaily],
