@@ -96,7 +96,7 @@ export class DailyAccess {
             ExpressionAttributeNames: {
                 '#i': 'id',
                 '#u': 'userId',
-                '#a': 'imageUrl'
+                '#iu': 'imageUrl'
             },
             ReturnValues: "UPDATED_NEW"
         }).promise();

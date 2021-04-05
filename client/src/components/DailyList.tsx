@@ -48,25 +48,6 @@ export class DailyList extends React.PureComponent<Props, State> {
     this.props.history.push(`/daily/${id}/edit`)
   }
 
-//   onDailyCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
-//     try {
-//       const date = this.calculateDueDate()
-//       console.log(JSON.stringify(this.state));
-//       const newDaily = await createDaily(this.props.auth.getIdToken(), {
-//         title: this.state.newTitle,
-//         content: this.state.newContent,
-//         date: date
-//       })
-//       this.setState({
-//         dailyList: [...this.state.dailyList, newDaily],
-//         newTitle: '',
-//         newContent : ''
-//       })
-//     } catch {
-//       alert('Daily creation failed')
-//     }
-//   }
-
   onDailyCreate = async () => {
     try {
       const newDaily = await createDaily(this.props.auth.getIdToken(), {
@@ -153,7 +134,7 @@ export class DailyList extends React.PureComponent<Props, State> {
       return this.renderLoading()
     }
 
-    return this.renderTodosList()
+    return this.renderDailyList()
   }
 
   renderLoading() {
@@ -166,14 +147,17 @@ export class DailyList extends React.PureComponent<Props, State> {
     )
   }
 
-  renderTodosList() {
+  renderDailyList() {
     return (
       <Grid padded>
         {this.state.dailyList.map((daily, pos) => {
           return (
             <Grid.Row key={daily.id}>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column width={3} verticalAlign="middle">
                 {daily.title}
+              </Grid.Column>
+              <Grid.Column width={3} verticalAlign="middle">
+                {daily.content}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 {daily.date}
