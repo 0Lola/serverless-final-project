@@ -265,11 +265,11 @@ resources:
                 - 'kms:*'
               Resource: '*'
 
-    # KMSKeyAlias:
-    #   Type: AWS::KMS::Alias
-    #   Properties:
-    #     AliasName: alias/auth0Key-${self:provider.stage}
-    #     TargetKeyId: !Ref KMSKey
+    KMSKeyAlias:
+      Type: AWS::KMS::Alias
+      Properties:
+        AliasName: alias/auth0KeyForDaily-${self:provider.stage}
+        TargetKeyId: !Ref KMSKey
 
     Auth0SecretForDaily:
       Type: AWS::SecretsManager::Secret
