@@ -67,7 +67,7 @@ functions:
           method: get
           path: daily
           cors: true
-          authorizer: Auth
+          # authorizer: Auth
     iamRoleStatements:
       - Effect: "Allow"
         Action:
