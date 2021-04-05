@@ -22,8 +22,8 @@ provider:
     USER_ID_INDEX: UserIdIndex
     IMAGE_BUCKET: serverless-daily-images-zxa011023
     SIGNED_URL_EXPIRATION: 3000
-    AUTH_0_SECRET_ID: Auth0SecretForDaily-${self:provider.stage}
-    AUTH_0_SECRET_FIELD: auth0SecretForDaily
+    AUTH_0_SECRET_ID: Auth0Secret-${self:provider.stage}
+    AUTH_0_SECRET_FIELD: auth0Secret
 
   iamRoleStatements:
     - Effect: Allow
@@ -34,7 +34,7 @@ provider:
     - Effect: Allow
       Action:
         - secretsmanager:GetSecretValue
-      Resource: !Ref Auth0SecretForDaily
+      Resource: !Ref Auth0Secret
     - Effect: Allow
       Action:
         - kms:Decrypt
@@ -67,7 +67,7 @@ functions:
           method: get
           path: daily
           cors: true
-          # authorizer: Auth
+          authorizer: Auth
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -267,12 +267,12 @@ resources:
     KMSKeyAlias:
       Type: AWS::KMS::Alias
       Properties:
-        AliasName: alias/auth0KeyForDaily-${self:provider.stage}
+        AliasName: alias/auth0Key-${self:provider.stage}
         TargetKeyId: !Ref KMSKey
 
-    Auth0SecretForDaily:
+    Auth0Secret:
       Type: AWS::SecretsManager::Secret
       Properties:
         Name: ${self:provider.environment.AUTH_0_SECRET_ID}
-        Description: Auth0 secret
+        Description: Auth0 Daily secret
         KmsKeyId: !Ref KMSKey

@@ -15,7 +15,7 @@ const secretField = process.env.AUTH_0_SECRET_FIELD
 export const handler = middy(async (event: CustomAuthorizerEvent, context): Promise<CustomAuthorizerResult> => {
     logger.info('Authorizing a user', event.authorizationToken)
     try {
-      const jwtToken = await verifyToken(event.authorizationToken,context.AUTH0_SECRET[secretField])
+        const jwtToken = await verifyToken(event.authorizationToken, context.AUTH0_SECRET[secretField])
         logger.info('User was authorized', jwtToken)
 
         return {
@@ -66,12 +66,12 @@ async function verifyToken(authHeader: string, secret: string): Promise<JwtPaylo
 
 handler.use(
     secretsManager({
-      awsSdkOptions: { region: 'us-east-1' },
-      cache: true,
-      cacheExpiryInMillis: 60000,
-      throwOnFailedCall: true,
-      secrets: {
-        AUTH0_SECRET: secretId
-      }
+        awsSdkOptions: { region: 'us-east-1' },
+        cache: true,
+        cacheExpiryInMillis: 60000,
+        throwOnFailedCall: true,
+        secrets: {
+            AUTH0_SECRET: secretId
+        }
     })
-  )
+)
