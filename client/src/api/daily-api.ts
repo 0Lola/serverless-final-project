@@ -6,6 +6,7 @@ import { UpdateDailyRequest } from '../types/UpdateDailyRequest'
 
 export async function getDaily(idToken: string): Promise<Daily[]> {
   console.log('Fetching daily')
+  console.log(idToken)
 
   const response = await Axios.get(`${apiEndpoint}/daily`, {
     headers: {
